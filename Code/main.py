@@ -13,7 +13,7 @@ for setting in settings_list:
         ds_list = get_dataset(setting["file_names"])
 
         if setting["single"] == "True":
-            data = single_file(ds_list,setting["start_time"],setting["end_time"],setting["variables"],setting["height_high"],setting["height_low"])
+            data = single_file(ds_list,setting["start_time"],setting["time_wanted"],setting["variables"],setting["height_high"],setting["height_low"])
         else:
             data = combine_files(ds_list,setting["variables"],setting["height_high"],setting["height_low"])
     

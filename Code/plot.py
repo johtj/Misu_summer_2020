@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import matplotlib.pyplot as plt
 import numpy as np
+import cftime as cf
 
 # def choose_plot(plot_type,data):
 #     if plot_type = "scatter":
@@ -18,17 +19,22 @@ def plot(data,settings):
 
 
 def plot_single(data,settings):
+    time_units = data[-1]["time_units"]
     for sets in data:
         for key in sets.keys():
-            if key != "time":
+            print(key)
+            if "time" not in key:
                 if len(np.shape(sets[key])) < 4:
-                    plt.plot(sets["time"],sets[key],label = key)
+                    time_plt = cf.date2num(sets["time_str"],time_units,calendar="standard")
+                    plt.plot(time_plt,sets[key],label = key)
                     
                 else:
                     plt.plot(sets["time"],sets[key],label = key)
+    
 
     plt.legend()
-    plt.savefig("/home/jojo161/MISU/job_summer_2020/Figures/single_plot.png") 
+    plt.show()
+    #plt.savefig("/home/jojo161/MISU/job_summer_2020/Figures/single_plot.png") 
     plt.close()  
         
         

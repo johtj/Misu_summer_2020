@@ -18,8 +18,12 @@ ds16 = nc.Dataset("/home/jojo161/MISU/job_summer_2020/Barrow_slav/barrow_slav-rh
 datasets = [ds14]
 variables = ["ta","tas","ts"]
 
-dims = ds14.dimensions
-if "lat" in dims:
-    lat = ds14["lat"]
-    if len(lat) < 1:
-        
+hours = 72
+minutes = hours*60
+time_var = ds14["time"] 
+
+time_test = dt.datetime.strptime("2018-08-17 12:00:00",'%Y-%m-%d %H:%M:%S')
+time_test_num = cf.date2num(time_test,time_var.units,calendar="standard")
+print(time_test)
+time_teest2 = time_test_num + 72*60
+print(cf.num2date(time_teest2,time_var.units,calendar="standard"))

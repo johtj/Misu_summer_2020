@@ -28,10 +28,10 @@ def combine_files(data_sets,variables,height_high,height_low):
     start_time = start_time_var[0]
     time_needed = 1380
 
-    #finds index of the start time
-    start_time_str = cf.num2date(start_time,start_time_var.units,calendar="standard")
-    index_start = nc.date2index(start_time_str,start_time_var,calendar="standard")
-
+    #as the start time is defined as the first time
+    # the index of the start time will always be zero
+    index_start = 0
+    
     #calculates the end time by adding the hours passed from the first time to the last
     end_time = start_time + time_needed
 
@@ -87,22 +87,25 @@ def combine_files(data_sets,variables,height_high,height_low):
 ##########################################################################################
 #filters variables from single files by time, returns a list of dictionaries.
 
-def single_file(data_sets,start_time,end_time,variables, height_high,height_low):
+def single_file(data_sets,start_time_str,time_wanted,variables, height_high,height_low):
     variable_sets = []
+
+    time_var = data_sets[0]["time"]
+    time_data = time_var[:]
+
+    start_time_dt = dt.datetime.strptime(start_time_str,'%Y-%m-%d %H:%M:%S')
+    start_time_num = cf.date2num(start_time_dt,time_var.units,calendar="standard")
+
+    end_time_num = start_time_num + time_wanted
+    end_lst = np.where((time_data<=end_time_num))[-1]
+    end_index = end_lst[-1]
+
     for ds in data_sets:
         data = {}
-        time_var = ds["time"]
-        if start_time == end_time:
-            start_time_dt = dt.datetime.strptime(start_time,'%Y-%m-%d %H:%M:%S')
-            index = nc.date2index(start_time_dt,time_var,calendar="standard")
-        else:
-            start_time_dt = dt.datetime.strptime(start_time,'%Y-%m-%d %H:%M:%S')
-            index_start = nc.date2index(start_time_dt,time_var,calendar="standard")
-
-            end_time_dt = dt.datetime.strptime(end_time,'%Y-%m-%d %H:%M:%S')
-            index_end = nc.date2index(end_time_dt,time_var,calendar="standard")
-
-            index = (index_start,index_end)
+        time_in_ds = ds["time"]
+        data["time_units"] = time_in_ds.units
+        data["time"] = time_in_ds[0:end_index]
+        data["time_str"] = cf.num2date(time_in_ds[0:end_index],time_in_ds.units,calendar="standard")
 
         level, half_level = get_levels(ds,height_high,height_low)
 
@@ -110,10 +113,7 @@ def single_file(data_sets,start_time,end_time,variables, height_high,height_low)
             var = ds[variable]
             dim = var.dimensions
             
-            if len(index) == 1:
-                value = np.array(ds[variable][index])
-            else:
-                value = np.array(ds[variable][index[0]:index[1]])
+            value = np.array(ds[variable][0:end_index])
 
             if ("lat" in dim and "lon" in dim) and len(dim) == 4:
                 value = np.transpose(value, (0, 3, 1, 2))

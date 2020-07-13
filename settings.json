@@ -2,14 +2,14 @@
   [
     {
     "plot_type":"scatter",
-    "start_time": "2018-03-31 12:07:30",
+    "start_time": "2018-03-31 12:00:00",
     "end_time": "2018-03-31 23:52:30",
     "file_names": [
         "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033112.nc",
         "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033012.nc",
         "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018032912.nc"
     ],
-    "height_high": 100, 
+    "height_high": 30, 
     "height_low" : 0,
     "variables" : [
       "ta",
@@ -18,7 +18,8 @@
       "time"
     ],
     "local" : "True",
-    "single" : "True"
+    "single" : "True",
+    "time_wanted": 24
   },
   {
     "plot_type":"scatter",
