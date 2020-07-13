@@ -8,7 +8,6 @@ import netCDF4 as nc
 fn = "/home/jojo161/MISU/job_summer_2020/settings.json"
 
 settings_list = load(fn)
-print(type(settings_list))
 for setting in settings_list:
     if setting["local"] == "True":
         ds_list = get_dataset(setting["file_names"])
