@@ -7,9 +7,16 @@ import numpy as np
 #         scatter(data)
 #     elif plot_type = "":
 
-def plot(data):
-    for sets in data:
-        for variable in sets:
-            if variable != "time":
-                plt.plot(sets["time"],sets[variable])
+def plot(data,settings):
+    #for sets in data:
+        for key in data.keys():
+            if key != "time":
+                if len(np.shape(data[key])) < 4:
+                    plt.plot(data["time"],data[key][:,0,0],label = key)
+                    
+                else:
+                    plt.plot(data["time"],data[key][:,:,0,0],label = key)
+
+        plt.legend()
         plt.show()
+        

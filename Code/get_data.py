@@ -21,11 +21,12 @@ def get_dataset(file_names):
 #it creates a new time array to fit the concatenated variables.
 #Returns a dictionary with the variable names as keys and the concatenated variables as values.
 
-def combine_files(data_sets,variables,time_needed):
+def combine_files(data_sets,variables,height_high,height_low):
     data = {}
     #takes the time variable and specifed first timevalue from the first file for reference
     start_time_var = data_sets[0]["time"]
     start_time = start_time_var[0]
+    time_needed = 1380
 
     #finds index of the start time
     start_time_str = cf.num2date(start_time,start_time_var.units,calendar="standard")
@@ -58,6 +59,8 @@ def combine_files(data_sets,variables,time_needed):
     #adds time as key in data dictionary with final_time as its value
     data["time"] = final_time
 
+    level,half_level = get_levels(data_sets[0],height_high,height_low)
+   
     #goes though each variable in the list and creates a dictionary key for it,
     #assigning the value of the 
     for variable in variables:
@@ -69,15 +72,21 @@ def combine_files(data_sets,variables,time_needed):
             
             if ("lat" in dim and "lon" in dim) and len(dim) == 4:
                 value = np.transpose(value, (0, 3, 1, 2))
+    
+            if "half-level" in dim:
+                value = value[:,half_level[0]:half_level[1]]
+            elif "level" in dim:
+                value = value[:,level[0]:level[1]]
 
             total.append(value)
+        
         data[variable] = np.concatenate(total)
     return data
 
 ##########################################################################################
 #filters variables from single files by time, returns a list of dictionaries.
 
-def single_file(data_sets,start_time,end_time,variables):
+def single_file(data_sets,start_time,end_time,variables, height_high,height_low):
     variable_sets = []
     for ds in data_sets:
         data = {}
@@ -94,6 +103,8 @@ def single_file(data_sets,start_time,end_time,variables):
 
             index = (index_start,index_end)
 
+        level, half_level = get_levels(ds,height_high,height_low)
+
         for variable in variables:
             var = ds[variable]
             dim = var.dimensions
@@ -105,17 +116,23 @@ def single_file(data_sets,start_time,end_time,variables):
 
             if ("lat" in dim and "lon" in dim) and len(dim) == 4:
                 value = np.transpose(value, (0, 3, 1, 2))
-                
+
+            if "half-level" in dim:
+                value = value[:,half_level[0]:half_level[1]]
+            elif "level" in dim:
+                value = value[:,level[0]:level[1]]  
+
             data[variable] = value
         variable_sets.append(data)
     return variable_sets
 
 ##################################################################################
-def get_levels(data_set,height_high,height_low,index_time):
+def get_levels(data_set,height_high,height_low):
     goph_level = np.array(data_set.variables["zg"][0,:])
     goph_half_level = np.array(data_set.variables["zghalf"][0,:])
+    print(goph_level,goph_half_level)
 
-    orog = int(data_set.variables["orog"][0])
+    orog = int(data_set.variables["Orog"][0,0,0])
 
     goph_level_new = goph_level - orog
     goph_half_level_new = goph_half_level -orog

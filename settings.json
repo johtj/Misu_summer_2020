@@ -1,11 +1,13 @@
 
   [
-    {
+  {
     "plot_type":"scatter",
     "start_time": "2018-03-31 12:07:30",
     "end_time": "2018-03-31 18:22:30",
     "file_names": [
-        "/home/jojo161/MISU/job_summer_2020/sodankyla_ifs-ecmwf_2018033112.nc"
+      "/home/jojo161/MISU/job_summer_2020/Barrow_slav/barrow_slav-rhmc_2018081400.nc",
+      "/home/jojo161/MISU/job_summer_2020/Barrow_slav/barrow_slav-rhmc_2018081500.nc",
+      "/home/jojo161/MISU/job_summer_2020/Barrow_slav/barrow_slav-rhmc_2018081600.nc"
     ],
     "height_high": 100, 
     "height_low" : 0,
@@ -13,7 +15,9 @@
       "ta",
       "tas",
       "ts"
-    ]
+    ],
+    "local" : "True",
+    "single" : "False"
   }
 ]
 
