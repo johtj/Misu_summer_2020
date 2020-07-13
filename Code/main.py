@@ -15,7 +15,6 @@ for setting in settings_list:
         if setting["single"] == "True":
             data = single_file(ds_list,setting["start_time"],setting["end_time"],setting["variables"],setting["height_high"],setting["height_low"])
         else:
-            print("in comb")
             data = combine_files(ds_list,setting["variables"],setting["height_high"],setting["height_low"])
     
     plot(data,setting)

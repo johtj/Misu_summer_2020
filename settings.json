@@ -1,5 +1,25 @@
 
   [
+    {
+    "plot_type":"scatter",
+    "start_time": "2018-03-31 12:07:30",
+    "end_time": "2018-03-31 23:52:30",
+    "file_names": [
+        "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033112.nc",
+        "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033012.nc",
+        "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018032912.nc"
+    ],
+    "height_high": 100, 
+    "height_low" : 0,
+    "variables" : [
+      "ta",
+      "tas",
+      "ts",
+      "time"
+    ],
+    "local" : "True",
+    "single" : "True"
+  },
   {
     "plot_type":"scatter",
     "start_time": "2018-03-31 12:07:30",
@@ -9,7 +29,7 @@
       "/home/jojo161/MISU/job_summer_2020/Barrow_slav/barrow_slav-rhmc_2018081500.nc",
       "/home/jojo161/MISU/job_summer_2020/Barrow_slav/barrow_slav-rhmc_2018081600.nc"
     ],
-    "height_high": 100, 
+    "height_high": 200, 
     "height_low" : 0,
     "variables" : [
       "ta",

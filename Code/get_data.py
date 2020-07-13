@@ -72,7 +72,8 @@ def combine_files(data_sets,variables,height_high,height_low):
             
             if ("lat" in dim and "lon" in dim) and len(dim) == 4:
                 value = np.transpose(value, (0, 3, 1, 2))
-    
+
+
             if "half-level" in dim:
                 value = value[:,half_level[0]:half_level[1]]
             elif "level" in dim:
@@ -92,14 +93,14 @@ def single_file(data_sets,start_time,end_time,variables, height_high,height_low)
         data = {}
         time_var = ds["time"]
         if start_time == end_time:
-            start_time = dt.datetime.strptime(start_time,'%Y-%m-%d %H:%M:%S')
-            index = nc.date2index(start_time,time_var,calendar="standard")
+            start_time_dt = dt.datetime.strptime(start_time,'%Y-%m-%d %H:%M:%S')
+            index = nc.date2index(start_time_dt,time_var,calendar="standard")
         else:
-            start_time = dt.datetime.strptime(start_time,'%Y-%m-%d %H:%M:%S')
-            index_start = nc.date2index(start_time,time_var,calendar="standard")
+            start_time_dt = dt.datetime.strptime(start_time,'%Y-%m-%d %H:%M:%S')
+            index_start = nc.date2index(start_time_dt,time_var,calendar="standard")
 
-            end_time = dt.datetime.strptime(end_time,'%Y-%m-%d %H:%M:%S')
-            index_end = nc.date2index(end_time,time_var,calendar="standard")
+            end_time_dt = dt.datetime.strptime(end_time,'%Y-%m-%d %H:%M:%S')
+            index_end = nc.date2index(end_time_dt,time_var,calendar="standard")
 
             index = (index_start,index_end)
 
@@ -128,18 +129,27 @@ def single_file(data_sets,start_time,end_time,variables, height_high,height_low)
 
 ##################################################################################
 def get_levels(data_set,height_high,height_low):
-    goph_level = np.array(data_set.variables["zg"][0,:])
-    goph_half_level = np.array(data_set.variables["zghalf"][0,:])
-    print(goph_level,goph_half_level)
+    level_var = data_set.variables["zg"]
+    half_level_var = data_set.variables["zghalf"]
 
-    orog = int(data_set.variables["Orog"][0,0,0])
-    print(orog)
-    
+    dims = level_var.dimensions
+    if "lat" in dims:
+        goph_level = np.array(level_var[0,0,0,:])
+        goph_half_level = np.array(half_level_var[0,0,0,:])
+        orog = float(data_set.variables["Orog"][0,0,0])
+    else:
+        goph_level = np.array(level_var[0,:])
+        goph_half_level = np.array(half_level_var[0,:])
+        orog = float(data_set.variables["orog"][0])
+
+
     goph_level_new = goph_level - orog
     goph_half_level_new = goph_half_level -orog
-    
+
+
     indecies_level = np.where((goph_level_new >= int(height_low))&(goph_level_new <= height_high))
     indecies_half_level = np.where((goph_half_level_new >= int(height_low))&(goph_half_level_new <= height_high))
-   
+    
     level , half_level = (indecies_level[0][0],indecies_level[0][-1]), (indecies_half_level[0][0],indecies_half_level[0][-1])
+    
     return level,half_level    
