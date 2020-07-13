@@ -133,7 +133,8 @@ def get_levels(data_set,height_high,height_low):
     print(goph_level,goph_half_level)
 
     orog = int(data_set.variables["Orog"][0,0,0])
-
+    print(orog)
+    
     goph_level_new = goph_level - orog
     goph_half_level_new = goph_half_level -orog
     
