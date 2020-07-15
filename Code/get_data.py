@@ -3,8 +3,36 @@ import netCDF4 as nc
 import cftime as cf
 import numpy as np
 import datetime as dt
+import os
 #this file containes the functions responsible for getting 
 #the variable data from the netCDF variables, as well as filtering it by time
+
+def get_files(paths,site_name,start_date,end_date):
+    start_date = dt.datetime.strptime(start_date,'%Y-%m-%d %H:%M:%S')
+    end_date = dt.datetime.strptime(end_date,'%Y-%m-%d %H:%M:%S')
+    needed_files = []
+    for path in paths:
+        if "obs" in path:
+            file_names = os.listdir(path)
+            for name in file_names:
+                if site_name in name:
+                    needed_files.append(name)
+
+        else:
+            file_names = sorted(os.listdir(path))
+            index = []
+            for name in file_names:
+                time = name.split("_")[-1].split(".")[0]
+                dt_time = dt.datetime.strptime(time,'%Y%m%d%H')
+            
+                if dt_time == start_date:
+                    index.append(file_names.index(name))
+                elif dt_time == end_date:
+                    index.append(file_names.index(name))
+
+        needed_files = file_names[index[0]:index[1]]
+    print(needed_files)
+    return needed_files
 
 #####################################################################
 #takes a list of filenames and returnes a list of datasets 
@@ -26,7 +54,7 @@ def combine_files(data_sets,variables,height_high,height_low):
     #takes the time variable and specifed first timevalue from the first file for reference
     start_time_var = data_sets[0]["time"]
     start_time = start_time_var[0]
-    time_needed = 1380
+    time_needed = 24#1380
 
     #as the start time is defined as the first time
     # the index of the start time will always be zero
@@ -37,6 +65,8 @@ def combine_files(data_sets,variables,height_high,height_low):
 
     #calculates the index of the endtime
     end_time_str = cf.num2date(end_time,start_time_var.units,calendar="standard")
+    print(start_time,cf.num2date(start_time,start_time_var.units,calendar="standard"))
+    print(end_time,end_time_str)
     index_end = nc.date2index(end_time_str,start_time_var,calendar="standard")
 
     #takes the time data from all the datasets, 
@@ -54,10 +84,13 @@ def combine_files(data_sets,variables,height_high,height_low):
     total_time = np.concatenate(total_time)
 
     #creates array of datestimes in number form using the units from the first file
-    final_time = cf.date2num(total_time,start_time_var.units,calendar="standard")
+    #final_time = cf.date2num(total_time,start_time_var.units,calendar="standard")
 
     #adds time as key in data dictionary with final_time as its value
-    data["time"] = final_time
+    #data["time"] = final_time
+    
+    data["time_total"] = total_time
+    data["time_units"] = start_time_var.units
 
     level,half_level = get_levels(data_sets[0],height_high,height_low)
    

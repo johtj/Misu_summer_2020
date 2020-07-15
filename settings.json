@@ -2,12 +2,14 @@
   [
     {
     "plot_type":"scatter",
+    "plot_name":"plot_one",
     "start_time": "2018-03-31 12:00:00",
     "end_time": "2018-03-31 23:52:30",
     "file_names": [
-        "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033112.nc",
-        "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033012.nc",
-        "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018032912.nc"
+      "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018032912.nc",
+      "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033012.nc",
+      "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033112.nc",
+      "/home/jojo161/MISU/job_summer_2020/utqiagvik_obs_sop1.2jul2019.nc"
     ],
     "height_high": 30, 
     "height_low" : 0,
@@ -23,12 +25,13 @@
   },
   {
     "plot_type":"scatter",
+    "plot_name": "plot_two",
     "start_time": "2018-03-31 12:07:30",
     "end_time": "2018-03-31 18:22:30",
     "file_names": [
-      "/home/jojo161/MISU/job_summer_2020/Barrow_slav/barrow_slav-rhmc_2018081400.nc",
-      "/home/jojo161/MISU/job_summer_2020/Barrow_slav/barrow_slav-rhmc_2018081500.nc",
-      "/home/jojo161/MISU/job_summer_2020/Barrow_slav/barrow_slav-rhmc_2018081600.nc"
+      "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018032912.nc",
+      "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033012.nc",
+      "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033112.nc"
     ],
     "height_high": 200, 
     "height_low" : 0,
@@ -39,6 +42,26 @@
     ],
     "local" : "True",
     "single" : "False"
+  },
+  {
+    "plot_type":"scatter",
+    "plot_name": "plot_three",
+    "start_time": "2018-03-31 12:00:00",
+    "end_time": "2018-03-31 23:52:30",
+    "file_names": [
+        "/home/jojo161/MISU/job_summer_2020/Sodankyla_ifs/sodankyla_ifs-ecmwf_2018033112.nc"
+    ],
+    "height_high": 30, 
+    "height_low" : 0,
+    "variables" : [
+      "ta",
+      "tas",
+      "ts",
+      "time"
+    ],
+    "local" : "True",
+    "single" : "True",
+    "time_wanted": 24
   }
 ]
 
