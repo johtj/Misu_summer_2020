@@ -5,43 +5,7 @@ import numpy as np
 import datetime as dt
 import os
 #this file containes the functions responsible for getting 
-#the variable data from the netCDF variables, as well as filtering it by time
-
-def get_files(paths,site_name,start_date,end_date):
-    start_date = dt.datetime.strptime(start_date,'%Y-%m-%d %H:%M:%S')
-    end_date = dt.datetime.strptime(end_date,'%Y-%m-%d %H:%M:%S')
-    needed_files = []
-    for path in paths:
-        if "obs" in path:
-            file_names = os.listdir(path)
-            for name in file_names:
-                if site_name in name:
-                    needed_files.append(name)
-
-        else:
-            file_names = sorted(os.listdir(path))
-            index = []
-            for name in file_names:
-                time = name.split("_")[-1].split(".")[0]
-                dt_time = dt.datetime.strptime(time,'%Y%m%d%H')
-            
-                if dt_time == start_date:
-                    index.append(file_names.index(name))
-                elif dt_time == end_date:
-                    index.append(file_names.index(name))
-
-        needed_files = file_names[index[0]:index[1]]
-    print(needed_files)
-    return needed_files
-
-#####################################################################
-#takes a list of filenames and returnes a list of datasets 
-# from which variable data can be retrived.
-def get_dataset(file_names):
-    data_sets = []
-    for fn in file_names:
-        data_sets.append(nc.Dataset(fn))
-    return data_sets
+#the variable data from the netCDF variables, as well as filtering it by time as well as height.
 
 #####################################################################
 #combines data  from the same variable in different files into into one single variable,
