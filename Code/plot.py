@@ -9,15 +9,21 @@ import cftime as cf
 #     elif plot_type = "":
 
 
-def plot(data,settings):
-    if settings["single"] == "True":
-        plot_single(data,settings)
-    else:
-        plot_combined(data,settings)
+def plot(mod_var,obs_var,settings):
+    for plt_type in settings["plots"]:
+        if plt_type == "timevar":
+            if settings["single"] == "True":
+                print("in single")
+                plot_single(mod_var,settings,plt_type)
+            else:
+                plot_combined(mod_var,settings)
+        elif plt_type == "scatter":
+            print("in scatter")
+            scatter_plot(mod_var,obs_var,settings)
 
 
 
-def plot_single(data,settings):
+def plot_single(data,settings,plot_type):
     time_units = data[0]["time_units"]
     for sets in data:
         for key in sets.keys():
@@ -27,10 +33,11 @@ def plot_single(data,settings):
                     plt.plot(time_plt,sets[key],label = key)
                     
                 else:
-                    plt.plot(sets["time"],sets[key],label = key)
+                    time_plt = cf.date2num(sets["time_str"],time_units,calendar="standard")
+                    plt.plot(time_plt,sets[key],label = key)
 
     path = "/home/jojo161/MISU/job_summer_2020/Figures/"
-    img_name = path + settings["plot_name"] +".png"
+    img_name = path + settings["plot_name"] + plot_type +".png"
     plt.legend()
     plt.savefig(img_name) 
     plt.close()  
@@ -58,5 +65,12 @@ def plot_combined(data,settings):
     plt.close()
 
 def scatter_plot(model_data,observation_data,settings):
-    #somehow..
-    plt.plot(model_data,observation_data)
+    for model in model_data:
+        print(model["time_str"][0],model["time_str"][-1])
+        print(observation_data["time_str"][0],observation_data["time_str"][-1])
+        plt.plot(model["tas"],observation_data["tas_2m"])
+    path = "/home/jojo161/MISU/job_summer_2020/Figures/"
+    img_name = path + settings["plot_name"] + plot_type +".png"
+    plt.legend()
+    plt.savefig(img_name) 
+    plt.close() 
