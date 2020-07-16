@@ -8,7 +8,7 @@ import netCDF4 as nc
 # it produces a list of datasets lists for each modeltype 
 # and one for the observation data
 
-def get_data(start_date,end_date,path_to_db,site,model_types,forcast_time):
+def get_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
     #first initialization of needed variables and two empty lists for the results
     start_date = dt.datetime.strptime(start_date,'%Y-%m-%d %H:%M:%S')
     end_date = dt.datetime.strptime(end_date,'%Y-%m-%d %H:%M:%S')
@@ -22,7 +22,7 @@ def get_data(start_date,end_date,path_to_db,site,model_types,forcast_time):
     for type_name in obs_file_types:
         #probably adding some form of if to filter which pathnames are made.
         obs_fname = path_to_db + "/"+site+"/obs/"+type_name
-        #obs_ds.append(nc.Dataset(obs_fname))
+    obs_ds.append(nc.Dataset("/home/jojo161/MISU/job_summer_2020/Data/Barrow/obs/utqiagvik_obs_sop1.2jul2019.nc"))
 
 
     for model_type in model_types:

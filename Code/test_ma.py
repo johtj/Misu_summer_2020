@@ -12,22 +12,10 @@ import datetime as dt
 #start will be 2018 08 14 00:00:00 and end will be 2018 08 16 23:00:00
 # take that timespan of each file
 
-obs = nc.Dataset("/home/jojo161/MISU/job_summer_2020/Data/Barrow/obs/utqiagvik_obs_sop1.2jul2019.nc")
-obs_ds = [obs]
-start_time = "2018-03-31 12:00:00"
-end_time = "2018-03-31 23:52:30"
-var = [ 
-    "tas_2m",
-    "tas_10m",
-    "tas_20m"
-]
-
-
-def observation_file(obs_ds,start_time,end_time,variables, height_high,height_low):
-    
+def observation_file(obs_ds,start_time,end_time, height_high,height_low):
+    variable_lst = [[ "tas_2m","tas_10m", "tas_20m"],["potato"]]
     time_var = obs_ds[0]["time"]
     t = np.array(time_var[:])
-    #print(np.shape(t))
 
     stime_dt = dt.datetime.strptime(start_time,'%Y-%m-%d %H:%M:%S')
     stime_num = cf.date2num(stime_dt,time_var.units,calendar="standard")
@@ -39,8 +27,14 @@ def observation_file(obs_ds,start_time,end_time,variables, height_high,height_lo
     tindex_lo = time_index[0]
     tindex_hi = time_index[-1]
     
+    variable_sets = []
+    for obs in obs_ds:
+        data = {}
+        variables = variable_lst[obs_ds.index(obs)]
+        for variable in variables:
+            data[variable] = obs[variable][tindex_lo:tindex_hi]
+        variable_sets.append(data)
     
+    return variable_sets
 
-    
-observation_file(obs_ds,start_time,end_time,var,0,100)
 

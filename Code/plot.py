@@ -40,7 +40,6 @@ def plot_single(data,settings):
 def plot_combined(data,settings):
     time_num = cf.date2num(data["time_total"],data["time_units"],calendar="standard")
     for key in data.keys():
-        print(key)
         if "time" not in key:
             if len(np.shape(data[key])) < 3:
                 #if shape is (time,level)
@@ -58,6 +57,6 @@ def plot_combined(data,settings):
     plt.savefig(img_name)
     plt.close()
 
-def scatter_plot(data,settings):
+def scatter_plot(model_data,observation_data,settings):
     #somehow..
     plt.plot(model_data,observation_data)
