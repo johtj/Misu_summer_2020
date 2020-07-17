@@ -54,11 +54,12 @@ def get_local_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
             files = file_lst[index[0]:index[1]+1]
             files_path = [dir_path+"/"+name for name in files]
 
+        print("files",files)
         
-        
-        model_ds.append([nc.Dataset(f_path) for f_path in files_path])
+        model_ds = [nc.Dataset(f_path) for f_path in files_path]
 
-    #two lists of datasets are returned, one for model data one for observation data   
+    #two lists of datasets are returned, one for model data one for observation data  
+    print("len ds",len(model_ds)) 
     return model_ds, obs_ds
 
 

@@ -60,3 +60,9 @@ plt.scatter(tas_mod,forklist)
 plt.xlabel("Model 2m temp /K")
 plt.ylabel("Observation 2m temp /K")
 plt.show()
+
+time_start = time_mod[0]
+time_next = time_mod[1]
+time_step = time_next-time_start
+
+#then somehow filter the data from obs on the basis of it being every fiftenth point

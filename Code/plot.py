@@ -3,12 +3,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cftime as cf
 
-# def choose_plot(plot_type,data):
-#     if plot_type = "scatter":
-#         scatter(data)
-#     elif plot_type = "":
-
-
 def plot(mod_var,obs_var,settings):
     for plt_type in settings["plots"]:
         if plt_type == "timevar":
@@ -62,30 +56,3 @@ def plot_combined(data,settings):
     plt.savefig(img_name)
     plt.close()
 
-def scatter_plot(mod_data,obs_data,settings):
-    for model in mod_data:
-
-        unit_mod = model["time_units"]
-        time_mod = cf.date2num(model["time_str"],unit_mod,calendar="standard")
-        time_obs_mod_units = cf.date2num(obs_data["time_str"],unit_mod,calendar="standard")
-
-        result_tas = []
-        lower = 0 
-        result_time = []
-        for ref_time in time_mod:
-            ranges = np.where((time_obs_mod_units<=ref_time)&(time_obs_mod_units>=lower))[0]
-            if len(ranges) > 0:
-                index = int(len(ranges)/2)
-                result_time.append(ranges[index])
-        for ind in result_time:
-            print(ind)
-            result_tas.append(obs_data["tas_2m"][ind])
-            
-        plt.plot(model["tas"],result_tas)
-
-    # path = "/home/jojo161/MISU/job_summer_2020/Figures/"
-    # img_name = path + settings["plot_name"] + plot_type +".png"
-    # plt.legend()
-    # plt.savefig(img_name) 
-    plt.show()
-    #plt.close() 

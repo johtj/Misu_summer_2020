@@ -179,6 +179,7 @@ def get_levels(data_set,height_high,height_low):
 
 def get_time(data_sets,start_time_str,time_wanted):
     time_wanted_min = time_wanted*60
+    print(type(data_sets))
     time_var = data_sets[0]["time"]
     time_data = time_var[:]
 
