@@ -125,7 +125,7 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low):
     time_index = np.where(((t >= stime_num)&(t<=etime_num)))[0]
     tindex_lo = time_index[0]
     tindex_hi = time_index[-1]
-
+    print("ind: ",tindex_lo,tindex_hi)
     time_str = cf.num2date(t[tindex_lo:tindex_hi],time_var.units,calendar="standard")
     time_units = time_var.units
 
