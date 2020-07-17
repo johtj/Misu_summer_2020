@@ -8,7 +8,7 @@ import netCDF4 as nc
 # it produces a list of datasets lists for each modeltype 
 # and one for the observation data
 
-def get_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
+def get_local_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
 
     #initialization of needed variables and two empty lists for the results
     start_date = dt.datetime.strptime(start_date,'%Y-%m-%d %H:%M:%S')
@@ -47,8 +47,15 @@ def get_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
                 index.append(file_lst.index(fname))
 
         #retreieve relevant files, add pathname to them and create datasets
-        files = file_lst[index[0]:index[1]+1]
-        files_path = [dir_path+"/"+name for name in files]
+        if len(index) == 1:
+            files = file_lst[index[0]]
+            files_path = [dir_path+"/"+files]
+        else:
+            files = file_lst[index[0]:index[1]+1]
+            files_path = [dir_path+"/"+name for name in files]
+
+        
+        
         model_ds.append([nc.Dataset(f_path) for f_path in files_path])
 
     #two lists of datasets are returned, one for model data one for observation data   
