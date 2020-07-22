@@ -15,7 +15,7 @@
     ],
     "local" : "True",
     "single" : "True",
-    "time_wanted": 24,
+    "time_wanted": 48,
     "path_to_db" : "/home/jojo161/MISU/job_summer_2020/Data",
     "site" : "Barrow",
     "model_types" : [

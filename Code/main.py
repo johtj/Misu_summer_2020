@@ -24,5 +24,5 @@ for setting in settings_list:
             filtered_mod_var = combine_files(mod_ds,setting["variables"],setting["start_date"],setting["time_wanted"],setting["height_high"],setting["height_low"])
         
     #plot(filtered_mod_var,filtered_obs_var[0],setting)
-    scatter_plot(filtered_mod_var,filtered_obs_var,setting)
+    scatter_plot(filtered_mod_var,filtered_obs_var[0],setting)
 
