@@ -42,7 +42,11 @@ def combine_files(data_sets,start_time,time_wanted,variables,height_high,height_
     data["time_units"] = unit
 
     #calculates indecies used for filtering by height
-    level,half_level = get_levels(data_sets[0],height_high,height_low)
+    try:
+        level,half_level = get_levels(data_sets[0],height_high,height_low)
+    except IndexError:
+        print("Index error in get_level: highest height lower than lowest height in model")
+           
    
     #goes though each variable in the list and creates a dictionary key for it,
     #assigning the value of the filtered concatinated variable
@@ -82,8 +86,11 @@ def single_files(data_sets,start_time_str,time_wanted,variables, height_high,hei
         time_in_ds = ds["time"]
         data["time_units"] = time_in_ds.units
         data["time_str"] = cf.num2date(time_in_ds[0:end_index],time_in_ds.units,calendar="standard")
-
-        level, half_level = get_levels(ds,height_high,height_low)
+        try:
+            level, half_level = get_levels(ds,height_high,height_low)
+        except IndexError:
+            print("Index error in get_level: highest height lower than lowest height in model")
+            break
 
         for variable in variables:
             var = ds[variable]
@@ -125,7 +132,7 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low):
     time_index = np.where(((t >= stime_num)&(t<=etime_num)))[0]
     tindex_lo = time_index[0]
     tindex_hi = time_index[-1]
-    print("ind: ",tindex_lo,tindex_hi)
+    
     time_str = cf.num2date(t[tindex_lo:tindex_hi],time_var.units,calendar="standard")
     time_units = time_var.units
 
@@ -137,9 +144,10 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low):
         variables = variable_lst[obs_ds.index(obs)]
         data["time_str"] = time_str
         data["time_units"] = time_units
+        data["time_delta"] = time_var.delta_t
 
         for variable in variables:
-            data[variable] = obs[variable][tindex_lo:tindex_hi]
+            data[variable] = np.array(obs[variable][tindex_lo:tindex_hi])
         variable_sets.append(data)
     
     return variable_sets
@@ -178,10 +186,11 @@ def get_levels(data_set,height_high,height_low):
 #handles the retreival of an end time index for filtering by time
 
 def get_time(data_sets,start_time_str,time_wanted):
-    time_wanted_min = time_wanted*60
-    print(type(data_sets))
     time_var = data_sets[0]["time"]
     time_data = time_var[:]
+
+    if "minutes" in time_var.units:
+        time_wanted = time_wanted*60
 
     start_time_dt = dt.datetime.strptime(start_time_str,'%Y-%m-%d %H:%M:%S')
     start_time_num = cf.date2num(start_time_dt,time_var.units,calendar="standard")

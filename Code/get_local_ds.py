@@ -29,7 +29,7 @@ def get_local_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
     #then read in the apropriate model data files, this is done by providing a directory,
     #site , model type and forcast time, and timespan, the apropriate files are then 
     #retreieved from that directory and stored as datasets.
-
+    files_path = []
     for model_type in model_types:
         #creat path to relevant directory for the site and model type specified
         dir_path = path_to_db + "/"+ site+"/"+model_type+"/"+forcast_time
@@ -49,17 +49,18 @@ def get_local_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
         #retreieve relevant files, add pathname to them and create datasets
         if len(index) == 1:
             files = file_lst[index[0]]
-            files_path = [dir_path+"/"+files]
+            files_path.append(dir_path+"/"+files)
         else:
             files = file_lst[index[0]:index[1]+1]
-            files_path = [dir_path+"/"+name for name in files]
-
-        print("files",files)
+            [files_path.append(dir_path+"/"+name) for name in files]
         
-        model_ds = [nc.Dataset(f_path) for f_path in files_path]
+    print("fp",len(files_path))
+
+    model_ds = [nc.Dataset(f_path) for f_path in files_path]
 
     #two lists of datasets are returned, one for model data one for observation data  
-    print("len ds",len(model_ds)) 
+    print("files",len(model_ds))
+        
     return model_ds, obs_ds
 
 

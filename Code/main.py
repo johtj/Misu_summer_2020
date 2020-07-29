@@ -18,11 +18,11 @@ for setting in settings_list:
         mod_ds, obs_ds = get_local_ds(setting["start_date"],setting["end_date"],setting["path_to_db"],setting["site"],setting["model_types"],setting["forcast_time"])
         filtered_obs_var = observation_files(obs_ds,setting["start_date"],setting["end_date"],setting["height_high"],setting["height_low"])
         filtered_mod_var = []
+        
         if setting["single"] == "True":
             filtered_mod_var = single_files(mod_ds,setting["start_date"],setting["time_wanted"],setting["variables"],setting["height_high"],setting["height_low"])
         else:
             filtered_mod_var = combine_files(mod_ds,setting["variables"],setting["start_date"],setting["time_wanted"],setting["height_high"],setting["height_low"])
-        
-    #plot(filtered_mod_var,filtered_obs_var[0],setting)
-    scatter_plot(filtered_mod_var,filtered_obs_var[0],setting)
+    plot(filtered_mod_var,filtered_obs_var[0],setting)
+    
 
