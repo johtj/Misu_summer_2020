@@ -57,10 +57,14 @@ def combine_files(data_sets,start_time,time_wanted,variables,height_high,height_
             dim = var.dimensions
             value = np.array(var[0:index_end])
             
+            #rearanges arrays in the format (time,lat,lon,level) 
+            #to the format of (time,level,lat,lon) to match
+            #the format of variables in the format of (time,level) that do not contain lat & lon.
+            #simplifies future filtering
             if ("lat" in dim and "lon" in dim) and len(dim) == 4:
                 value = np.transpose(value, (0, 3, 1, 2))
 
-
+            #filters by half level or level if necessary
             if "half-level" in dim:
                 value = value[:,half_level[0]:half_level[1]]
             elif "level" in dim:
@@ -77,15 +81,22 @@ def combine_files(data_sets,start_time,time_wanted,variables,height_high,height_
 def single_files(data_sets,start_time_str,time_wanted,variables, height_high,height_low):
     variable_sets = []
 
-    end_index,unit = get_time(data_sets,start_time_str,time_wanted)
+    #calculates the index of the last time needed for time filtering purposes
+    end_index = get_time(data_sets,start_time_str,time_wanted)[0]
 
     #goes through datasets in the data_sets list and creates a dictionary 
     #with wanted variables filtered by height and time
     for ds in data_sets:
+
+        #creates a dictionary to keep the data in 
         data = {}
+
+        #creates and adds the time units and an array of datetime objects to the dictionary
         time_in_ds = ds["time"]
         data["time_units"] = time_in_ds.units
         data["time_str"] = cf.num2date(time_in_ds[0:end_index],time_in_ds.units,calendar="standard")
+        
+        #gets level and half_level indecies for filtering purposes
         try:
             level, half_level = get_levels(ds,height_high,height_low)
         except IndexError:
@@ -98,9 +109,14 @@ def single_files(data_sets,start_time_str,time_wanted,variables, height_high,hei
             
             value = np.array(ds[variable][0:end_index])
 
+            #rearanges arrays in the format (time,lat,lon,level) 
+            #to the format of (time,level,lat,lon) to match
+            #the format of variables in the format of (time,level) that do not contain lat & lon.
+            #simplifies future filtering
             if ("lat" in dim and "lon" in dim) and len(dim) == 4:
                 value = np.transpose(value, (0, 3, 1, 2))
 
+            #filters by level and half level if necessary
             if "half-level" in dim:
                 value = value[:,half_level[0]:half_level[1]]
             elif "level" in dim:
@@ -118,7 +134,7 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low):
     #first a list of desired variables is created
     variable_lst = [["tas_2m"]]
 
-    #then the timespan index is found so only data over a certain time period 
+    #the timespan index is found so only data over a certain time period 
     #is retrieved
     time_var = obs_ds[0]["time"]
     t = np.array(time_var[:])
@@ -133,6 +149,7 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low):
     tindex_lo = time_index[0]
     tindex_hi = time_index[-1]
     
+    #variables for time units, and an array of datetime objects are created
     time_str = cf.num2date(t[tindex_lo:tindex_hi],time_var.units,calendar="standard")
     time_units = time_var.units
 
@@ -142,11 +159,15 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low):
     for obs in obs_ds:
         data = {}
         variables = variable_lst[obs_ds.index(obs)]
+        
+        #the above defined time units and array, as well as a now specified time step
+        #variable are added to the dictionary
         data["time_str"] = time_str
         data["time_units"] = time_units
         data["time_delta"] = time_var.delta_t
 
         for variable in variables:
+            #specified variables are added to the dictionary filtered by time
             data[variable] = np.array(obs[variable][tindex_lo:tindex_hi])
         variable_sets.append(data)
     
@@ -157,9 +178,13 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low):
 #both using level and half level
 
 def get_levels(data_set,height_high,height_low):
+
+    #retrievs the geopotential height on levels and half levels
     level_var = data_set.variables["zg"]
     half_level_var = data_set.variables["zghalf"]
 
+    #retrieves the surface altitude in the apropriate way depending upon the 
+    #exsitance of lat and lon in the variable.
     dims = level_var.dimensions
     if "lat" in dims:
         goph_level = np.array(level_var[0,0,0,:])
@@ -170,14 +195,16 @@ def get_levels(data_set,height_high,height_low):
         goph_half_level = np.array(half_level_var[0,:])
         orog = float(data_set.variables["orog"][0])
 
-
+    #gets heights by subtracting the surface height from the geopotenital height
     goph_level_new = goph_level - orog
     goph_half_level_new = goph_half_level -orog
 
-
+    #finds the indecies that lie within the height bounds specified in settings.json
     indecies_level = np.where((goph_level_new >= int(height_low))&(goph_level_new <= height_high))
     indecies_half_level = np.where((goph_half_level_new >= int(height_low))&(goph_half_level_new <= height_high))
     
+    #takes the highest and lowest of these indecies and creates 
+    #one tuple with the ranges for level and one for half level
     level , half_level = (indecies_level[0][0],indecies_level[0][-1]), (indecies_half_level[0][0],indecies_half_level[0][-1])
     
     return level,half_level    
@@ -186,19 +213,28 @@ def get_levels(data_set,height_high,height_low):
 #handles the retreival of an end time index for filtering by time
 
 def get_time(data_sets,start_time_str,time_wanted):
+    #creates the time variable 
     time_var = data_sets[0]["time"]
     time_data = time_var[:]
 
+    #adapts the time_wanted variable (which is in hours)
+    #to the model units if they are in minutes
     if "minutes" in time_var.units:
         time_wanted = time_wanted*60
 
+    #makes the start time string into a number using the time units from the 
+    #time variable created above
     start_time_dt = dt.datetime.strptime(start_time_str,'%Y-%m-%d %H:%M:%S')
     start_time_num = cf.date2num(start_time_dt,time_var.units,calendar="standard")
 
+    #calculates an end time by adding the time_wanted to the start time number
     end_time_num = start_time_num + time_wanted
+
+    #finds the index of where this time occurs in the time array
     end_lst = np.where((time_data<=end_time_num))[-1]
     end_index = end_lst[-1]
 
     unit = time_var.units
 
+    #returns this index as well as the time units used to calculate it
     return end_index,unit

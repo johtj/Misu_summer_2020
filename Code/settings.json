@@ -29,7 +29,9 @@
     "colors" : [
       "red",
       "blue"
-    ]
+    ],
+    "lat" : 0,
+    "lon" : 0,
   }
 ]
 

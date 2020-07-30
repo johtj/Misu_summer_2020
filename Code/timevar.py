@@ -5,6 +5,7 @@ import cftime as cf
 
 def plot_single(data,settings,plot_type):
     time_units = data[0]["time_units"]
+    print(data[0]["ts"])
     for sets in data:
         time_plt = cf.date2num(sets["time_str"],time_units,calendar="standard")
         for key in sets.keys():
@@ -18,7 +19,7 @@ def plot_single(data,settings,plot_type):
                 else:
                     plt.plot(time_plt,sets[key][:,0,0,0],label = key)
                     
-
+    plt.xlabel(time_units)
     path = "/home/jojo161/MISU/job_summer_2020/Figures/"
     img_name = path + settings["plot_name"] + plot_type +".png"
     plt.legend()
@@ -43,6 +44,7 @@ def plot_combined(data,settings):
    
     path = "/home/jojo161/MISU/job_summer_2020/Figures/"
     img_name = path + settings["plot_name"] +".png"
+    plt.xlabel(time_units)
     plt.legend()
     plt.savefig(img_name)
     plt.close()

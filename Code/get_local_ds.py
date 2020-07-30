@@ -54,7 +54,6 @@ def get_local_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
             files = file_lst[index[0]:index[1]+1]
             [files_path.append(dir_path+"/"+name) for name in files]
         
-    print("fp",len(files_path))
 
     model_ds = [nc.Dataset(f_path) for f_path in files_path]
 
