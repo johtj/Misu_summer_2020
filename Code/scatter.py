@@ -25,8 +25,9 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
     #creates a list of colors to use for different models if more than one is used
     colors = settings["colors"]
     color_index = 0
-
+    
     for model in mod_data:
+
         color = colors[color_index]
        
         #converts the observational data timestring to numbers using the units 

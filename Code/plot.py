@@ -16,7 +16,7 @@ def plot(mod_var,obs_var,settings):
             if settings["single"] == "True":
                 plot_single(mod_var,settings,plt_type)
             else:
-                plot_combined(mod_var,settings)
+                plot_combined(mod_var[0],settings,plt_type)
         elif plt_type == "scatter":
             scatter_plot(mod_var,obs_var,settings,"tas")
 

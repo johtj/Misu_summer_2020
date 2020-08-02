@@ -13,12 +13,12 @@ import os
 #it creates a new time array to fit the concatenated variables.
 #Returns a dictionary with the variable names as keys and the concatenated variables as values.
 
-def combine_files(data_sets,start_time,time_wanted,variables,height_high,height_low):
+def combine_files(data_sets,settings,target_lat_lon):
     data = {}
 
     #calculates the index of the last time needed for time filtering purposes
     #also gives the time unit from the first dataset in the list
-    index_end,unit = get_time(data_sets,start_time,time_wanted)
+    index_end,unit = get_time(data_sets[0],settings["start_date"],settings["time_wanted"])
 
     #takes the time data from all the datasets, 
     #converts them to use the same unit as used in the first file
@@ -38,31 +38,42 @@ def combine_files(data_sets,start_time,time_wanted,variables,height_high,height_
 
     #adds this new time variable into the dictionary as datetime objects
     #as well as its units.
-    data["time_total"] = total_time
+    data["time_str"] = total_time
     data["time_units"] = unit
 
     #calculates indecies used for filtering by height
     try:
-        level,half_level = get_levels(data_sets[0],height_high,height_low)
+        level,half_level = get_levels(data_sets[0],settings["height_high"],settings["height_low"])
     except IndexError:
         print("Index error in get_level: highest height lower than lowest height in model")
            
-   
+    index_lat , index_lon, single = get_lat_lon(data_sets[0],target_lat_lon,settings)
+
     #goes though each variable in the list and creates a dictionary key for it,
     #assigning the value of the filtered concatinated variable
-    for variable in variables:
+    for variable in settings["variables"]:
         total = []
         for dataset in data_sets:
             var = dataset[variable]
             dim = var.dimensions
             value = np.array(var[0:index_end])
+
+            #filters by latitude and longitide
+            if "lat" in dim:
+                if single == True:
+                    value = value[:,index_lat,index_lon]
+                else:
+                    value = value[:,index_lat[0]:index_lat[1],index_lon[0]:index_lon[1]]
+                    
             
             #rearanges arrays in the format (time,lat,lon,level) 
             #to the format of (time,level,lat,lon) to match
             #the format of variables in the format of (time,level) that do not contain lat & lon.
             #simplifies future filtering
-            if ("lat" in dim and "lon" in dim) and len(dim) == 4:
+            if ("lat" in dim and "lon" in dim) and np.shape(value) == 4:
                 value = np.transpose(value, (0, 3, 1, 2))
+
+            
 
             #filters by half level or level if necessary
             if "half-level" in dim:
@@ -73,16 +84,19 @@ def combine_files(data_sets,start_time,time_wanted,variables,height_high,height_
             total.append(value)
         
         data[variable] = np.concatenate(total)
-    return data
+    #the output needs to be a list due to the fact that the output of
+    #single_files() is a list and the two need to utilize the same functions
+    datalst = [data]
+    return datalst
 
 ##########################################################################################
 #filters variables from single files by time, returns a list of dictionaries.
 
-def single_files(data_sets,start_time_str,time_wanted,variables, height_high,height_low):
+def single_files(data_sets,settings,target_lat_lon):
     variable_sets = []
 
     #calculates the index of the last time needed for time filtering purposes
-    end_index = get_time(data_sets,start_time_str,time_wanted)[0]
+    end_index = get_time(data_sets[0],settings["start_date"],settings["time_wanted"])[0]
 
     #goes through datasets in the data_sets list and creates a dictionary 
     #with wanted variables filtered by height and time
@@ -98,22 +112,32 @@ def single_files(data_sets,start_time_str,time_wanted,variables, height_high,hei
         
         #gets level and half_level indecies for filtering purposes
         try:
-            level, half_level = get_levels(ds,height_high,height_low)
+            level, half_level = get_levels(ds,settings["height_high"],settings["height_low"])
         except IndexError:
             print("Index error in get_level: highest height lower than lowest height in model")
             break
 
-        for variable in variables:
+        index_lat , index_lon, single = get_lat_lon(data_sets[0],target_lat_lon,settings)
+
+        for variable in settings["variables"]:
             var = ds[variable]
             dim = var.dimensions
             
             value = np.array(ds[variable][0:end_index])
 
+            #filters by latitude and longitide
+            if "lat" in dim:
+                if single == True:
+                    value = value[:,index_lat,index_lon]
+                else:
+                    value = value[:,index_lat[0]:index_lat[1],index_lon[0]:index_lon[1]]
+                    
+
             #rearanges arrays in the format (time,lat,lon,level) 
             #to the format of (time,level,lat,lon) to match
             #the format of variables in the format of (time,level) that do not contain lat & lon.
             #simplifies future filtering
-            if ("lat" in dim and "lon" in dim) and len(dim) == 4:
+            if ("lat" in dim and "lon" in dim) and np.shape(value) == 4:
                 value = np.transpose(value, (0, 3, 1, 2))
 
             #filters by level and half level if necessary
@@ -212,9 +236,9 @@ def get_levels(data_set,height_high,height_low):
 #######################################################################################
 #handles the retreival of an end time index for filtering by time
 
-def get_time(data_sets,start_time_str,time_wanted):
+def get_time(data_set,start_time_str,time_wanted):
     #creates the time variable 
-    time_var = data_sets[0]["time"]
+    time_var = data_set["time"]
     time_data = time_var[:]
 
     #adapts the time_wanted variable (which is in hours)
@@ -238,3 +262,36 @@ def get_time(data_sets,start_time_str,time_wanted):
 
     #returns this index as well as the time units used to calculate it
     return end_index,unit
+
+############################################################################################
+#this function handles the selection of latitude and longtude indecies for filtering 
+#purposes
+
+def get_lat_lon(data_set,target, settings):
+    data_lat = np.array(data_set["lat"])
+    data_lon = np.array(data_set["lon"])
+
+    if len(data_lon) == 1 or len(data_lat) == 1:
+        #if there is only one latitude and longitude in the dataset
+        #that lat & lon are selected
+        lat_ind = 0
+        lon_ind = 0
+        single = True
+    else:
+        #if there are multiple lat & lon points
+        if settings["single_point"] == "True":
+            #if single point set to True in settings.json the closest value to 
+            #the lat & lon in the observational file is found and that index is recorded
+            lat_ind = np.abs(data_lat-target[0]).argmin()
+            lon_ind = np.abs(data_lon-target[1]).argmin()
+            single = True
+        else: 
+            #if single point isn't set to True in settings.json the index ranges are
+            #taken from settings.json
+            lat_ind = (settings["lat_ind_lo"],settings["lat_ind_hi"])
+            lon_ind = (settings["lon_ind_lo"],settings["lon_ind_hi"])
+            single = False
+
+    #in the first to cases the output will be integers representing the index of the value
+    #in the last the output will be a tuple with the index range for the values wanted
+    return lat_ind,lon_ind,single

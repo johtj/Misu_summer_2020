@@ -1,12 +1,11 @@
 
   [
     {
-    "plot_type":"scatter",
     "plot_name":"plot_one",
     "start_date": "2018-03-29 00:00:00",
     "end_date": "2018-03-30 23:59:59",
     "height_high": 100, 
-    "height_low" : 30,
+    "height_low" : 0,
     "variables" : [
       "ta",
       "tas",
@@ -19,7 +18,8 @@
     "path_to_db" : "/home/jojo161/MISU/job_summer_2020/Data",
     "site" : "Barrow",
     "model_types" : [
-      "slav"
+      "slav",
+      "ifs"
     ],
     "forcast_time" : "00",
     "plots" : [
@@ -30,8 +30,47 @@
       "red",
       "blue"
     ],
-    "lat" : 0,
-    "lon" : 0,
+    "single_point" : "True",
+    "lat_ind_hi": 1,
+    "lat_ind_lo": 1,
+    "lon_ind_hi" : 1,
+    "lon_ind_lo" : 2
+  },
+  {
+    "plot_name":"plot_two",
+    "start_date": "2018-03-29 00:00:00",
+    "end_date": "2018-03-30 00:00:00",
+    "height_high": 100, 
+    "height_low" : 0,
+    "variables" : [
+      "ta",
+      "tas",
+      "ts",
+      "time"
+    ],
+    "local" : "True",
+    "single" : "False",
+    "time_wanted": 48,
+    "path_to_db" : "/home/jojo161/MISU/job_summer_2020/Data",
+    "site" : "Barrow",
+    "model_types" : [
+      "slav",
+      "ifs"
+    ],
+    "forcast_time" : "00",
+    "plots" : [
+      "timevar",
+      "scatter"
+    ],
+    "colors" : [
+      "red",
+      "blue"
+    ],
+    "single_point" : "True",
+    "lat_ind_hi": 1,
+    "lat_ind_lo": 1,
+    "lon_ind_hi" : 1,
+    "lon_ind_lo" : 2
   }
 ]
 

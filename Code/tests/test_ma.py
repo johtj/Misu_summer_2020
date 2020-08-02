@@ -12,29 +12,17 @@ import datetime as dt
 #start will be 2018 08 14 00:00:00 and end will be 2018 08 16 23:00:00
 # take that timespan of each file
 
-def observation_file(obs_ds,start_time,end_time, height_high,height_low):
-    variable_lst = [[ "tas_2m","tas_10m", "tas_20m"],["potato"]]
-    time_var = obs_ds[0]["time"]
-    t = np.array(time_var[:])
+array = np.array([[10, 11, 12],[13, 14, 15]])
 
-    stime_dt = dt.datetime.strptime(start_time,'%Y-%m-%d %H:%M:%S')
-    stime_num = cf.date2num(stime_dt,time_var.units,calendar="standard")
+print(array)
 
-    etime_dt = dt.datetime.strptime(end_time,'%Y-%m-%d %H:%M:%S')
-    etime_num = cf.date2num(etime_dt,time_var.units,calendar="standard")
+target_easy = 11
+target_meeep = 11.5
 
-    time_index = np.where(((t >= stime_num)&(t<=etime_num)))[0]
-    tindex_lo = time_index[0]
-    tindex_hi = time_index[-1]
-    
-    variable_sets = []
-    for obs in obs_ds:
-        data = {}
-        variables = variable_lst[obs_ds.index(obs)]
-        for variable in variables:
-            data[variable] = obs[variable][tindex_lo:tindex_hi]
-        variable_sets.append(data)
-    
-    return variable_sets
+idx_easy = np.abs(array-target_easy).argmin()
 
+print(idx_easy)
 
+idx = np.abs(array-target_meeep).argmin()
+
+print(idx)

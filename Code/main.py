@@ -19,11 +19,16 @@ settings_list = load_settings(fn)
 #as multiple runs with different settings can be read from the same settings file
 #these different settings are looped.
 
-for setting in settings_list:   
+for setting in settings_list: 
+    print("=========================================================================")  
     if setting["local"] == "True":
         #takes the files from a specified local directory, see get_local_ds.py
         mod_ds, obs_ds = get_local_ds(setting["start_date"],setting["end_date"],setting["path_to_db"],setting["site"],setting["model_types"],setting["forcast_time"])
         
+        #takes the latitude and longitude from the first observational file to use in filtering
+        #in single_files() and combined_files()
+        target_lat_lon = (obs_ds[0]["lat"],obs_ds[0]["lon"])
+
         #observational files are always handled the same way, here the required data is 
         #retrieved and filtered, see get_var_sets.py
         filtered_obs_var = observation_files(obs_ds,setting["start_date"],setting["end_date"],setting["height_high"],setting["height_low"])
@@ -31,10 +36,10 @@ for setting in settings_list:
         
         if setting["single"] == "True":
             #handles the files as single entities, retrieves data and filters it, see get_var_sets.py
-            filtered_mod_var = single_files(mod_ds,setting["start_date"],setting["time_wanted"],setting["variables"],setting["height_high"],setting["height_low"])
+            filtered_mod_var = single_files(mod_ds,setting,target_lat_lon)
         else:
             #combines multiple files into one set of data and filters it, see get_var_sets.py
-            filtered_mod_var = combine_files(mod_ds,setting["variables"],setting["start_date"],setting["time_wanted"],setting["height_high"],setting["height_low"])
+            filtered_mod_var = combine_files(mod_ds,setting,target_lat_lon)
     
     #plots the data retreived above, see plot.py
     plot(filtered_mod_var,filtered_obs_var[0],setting)
