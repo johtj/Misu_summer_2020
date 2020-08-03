@@ -11,8 +11,8 @@ import netCDF4 as nc
 def get_local_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
 
     #initialization of needed variables and two empty lists for the results
-    start_date = dt.datetime.strptime(start_date,'%Y-%m-%d %H:%M:%S')
-    end_date = dt.datetime.strptime(end_date,'%Y-%m-%d %H:%M:%S')
+    start_date = dt.datetime.strptime(start_date.split(" ")[0],'%Y-%m-%d')
+    end_date = dt.datetime.strptime(end_date.split(" ")[0],'%Y-%m-%d')
     obs_ds = []
     obs_file_types = ["smthn_obs","smthn_sond","smthn_cloud"]
     model_ds = []
@@ -54,12 +54,12 @@ def get_local_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
             files = file_lst[index[0]:index[1]+1]
             [files_path.append(dir_path+"/"+name) for name in files]
         
-    print(files_path)
+    
     model_ds = [nc.Dataset(f_path) for f_path in files_path]
-
+    
     #two lists of datasets are returned, one for model data one for observation data  
-    #print("files",len(model_ds))
+
         
-    return model_ds, obs_ds
+    return model_ds, obs_ds ,files_path
 
 

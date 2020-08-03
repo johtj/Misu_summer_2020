@@ -20,10 +20,10 @@ settings_list = load_settings(fn)
 #these different settings are looped.
 
 for setting in settings_list: 
-    print("=========================================================================")  
+    print(setting["plot_name"])  
     if setting["local"] == "True":
         #takes the files from a specified local directory, see get_local_ds.py
-        mod_ds, obs_ds = get_local_ds(setting["start_date"],setting["end_date"],setting["path_to_db"],setting["site"],setting["model_types"],setting["forcast_time"])
+        mod_ds, obs_ds, file_names = get_local_ds(setting["start_date"],setting["end_date"],setting["path_to_db"],setting["site"],setting["model_types"],setting["forcast_time"])
         
         #takes the latitude and longitude from the first observational file to use in filtering
         #in single_files() and combined_files()
@@ -39,7 +39,10 @@ for setting in settings_list:
             filtered_mod_var = single_files(mod_ds,setting,target_lat_lon)
         else:
             #combines multiple files into one set of data and filters it, see get_var_sets.py
-            filtered_mod_var = combine_files(mod_ds,setting,target_lat_lon)
+            filtered_mod_var = combine_files(mod_ds,setting,target_lat_lon,file_names)
+            
+
+            
     
     #plots the data retreived above, see plot.py
     plot(filtered_mod_var,filtered_obs_var[0],setting)

@@ -8,6 +8,44 @@ Getting started
 ---------------------------------------------------
 How to change settings:
 
+the following is the format for the settings in the json file:
+    {
+    "plot_name":"plot_one",
+    "start_date": "2018-03-29 00:00:00",
+    "end_date": "2018-03-30 23:59:59",
+    "height_high": 100, 
+    "height_low" : 0,
+    "variables" : [
+      "ta",
+      "tas",
+      "ts"
+    ],
+    "local" : "True",
+    "single" : "True",
+    "time_wanted": 48,
+    "path_to_db" : "/home/jojo161/MISU/job_summer_2020/Data",
+    "site" : "Barrow",
+    "model_types" : [
+      "ifs",
+      "slav"
+    ],
+    "forcast_time" : "00",
+    "plots" : [
+      "timevar",
+      "scatter"
+    ],
+    "colors" : [
+      "red",
+      "blue"
+    ],
+    "single_point" : "True",
+    "lat_ind_hi": 1,
+    "lat_ind_lo": 1,
+    "lon_ind_hi" : 1,
+    "lon_ind_lo" : 2
+  }
+
+
 The changable settings for reading and plotting data from netCDF files
 are contained in the file "settings.json". Changes to this file must follow 
 the following format:

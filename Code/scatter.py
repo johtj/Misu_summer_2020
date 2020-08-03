@@ -25,16 +25,18 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
     #creates a list of colors to use for different models if more than one is used
     colors = settings["colors"]
     color_index = 0
+
+    
     
     for model in mod_data:
-
+        
         color = colors[color_index]
        
         #converts the observational data timestring to numbers using the units 
         #of the model 
         obs_time_num = cf.date2num(obs_time_str,model["time_units"],calendar="standard")
         time_mod = cf.date2num(model["time_str"],model["time_units"],calendar="standard")
-
+        
         tas_obs_res = []
         #time_check = [] used to check if the time selection is done correctly
 
@@ -75,11 +77,10 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
                 #time_check.append(obs_time_num[match_initial[0]]) used to check if time selection is accurate
 
         
-        #handles the plotting, in a way without previous lat, lon filteration
-        try:
-            plt.scatter(var_mod,tas_obs_res,c = color)
-        except:
-            plt.scatter(var_mod[:,0,0],tas_obs_res,c = color)
+       
+        
+        plt.scatter(var_mod,tas_obs_res,c = color)
+        
 
         #plt.scatter(time_check,time_mod) used to check if time selection is accurate, if this
         #produces a/or something close to a  1to1 line plot then the time selection is accurate

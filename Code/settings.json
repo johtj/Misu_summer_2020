@@ -9,8 +9,7 @@
     "variables" : [
       "ta",
       "tas",
-      "ts",
-      "time"
+      "ts"
     ],
     "local" : "True",
     "single" : "True",
@@ -18,8 +17,8 @@
     "path_to_db" : "/home/jojo161/MISU/job_summer_2020/Data",
     "site" : "Barrow",
     "model_types" : [
-      "slav",
-      "ifs"
+      "ifs",
+      "slav"
     ],
     "forcast_time" : "00",
     "plots" : [
@@ -45,12 +44,11 @@
     "variables" : [
       "ta",
       "tas",
-      "ts",
-      "time"
+      "ts"
     ],
     "local" : "True",
     "single" : "False",
-    "time_wanted": 48,
+    "time_wanted": 24,
     "path_to_db" : "/home/jojo161/MISU/job_summer_2020/Data",
     "site" : "Barrow",
     "model_types" : [
