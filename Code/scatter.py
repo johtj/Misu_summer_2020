@@ -10,7 +10,7 @@ import datetime as dt
 #selection of points from obs are chosen so they can be plotted against each other. 
 
 def scatter_plot(mod_data,obs_data,settings,var_name):
-    
+    #time_plt,units,calentime_plt,units,calendar="standard")[-1])dar="standard")[-1])
     #time string for observational data obtained
     obs_time_str = obs_data["time_str"]
 
@@ -39,9 +39,11 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
         
         tas_obs_res = []
         #time_check = [] used to check if the time selection is done correctly
-
+    
         var_mod = model[var_name]
 
+        print(obs_time_str[-1])
+        print(model["time_str"][-1])
         #loops the model's time array and looks for a match in the observational data time array
         for reference in time_mod:
 
@@ -59,12 +61,19 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
                 #matches are then searched for in this interval
                 matches_spec = np.where((ref_high >= obs_time_num)&(ref_low <= obs_time_num))[0]
                 
+            
                 
                 #if more than one match is found in the interval
-                #the earlier of the two (low) is chosen as the representative valu
+                #the earlier of the two (low) is chosen as the representative value
                 #the value from the desired variable
                 # at this time index is then added to the results list
-                tas_obs_res.append(var_obs[matches_spec[0]])
+                if len(matches_spec) != 0:
+                    tas_obs_res.append(var_obs[matches_spec[0]])
+                else:
+                    #find index of time in var_time
+                    #delete item form mod_var corresponding to that time
+                    var_mod_res = np.delete(var_mod,np.where((reference == time_mod)))
+                    
 
                 #time_check.append(obs_time_num[matches_spec[0]]) used to check if time selection is accurate
 
@@ -79,7 +88,7 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
         
        
         
-        plt.scatter(var_mod,tas_obs_res,c = color)
+        plt.scatter(var_mod_res,tas_obs_res,c = color)
         
 
         #plt.scatter(time_check,time_mod) used to check if time selection is accurate, if this

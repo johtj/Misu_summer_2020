@@ -18,8 +18,15 @@ def combine_files(data_sets,settings,target_lat_lon,file_names):
 
     sorted_data_sets = get_model_groups(data_sets,file_names,settings)
     
+    count = 0
     for model in sorted_data_sets:
+        #gets model name
+        name = settings["model_types"][count]
+        count = count +1
+    
         data = {}
+        data["name"] = name
+        print(data["name"])
         #calculates the index of the last time needed for time filtering purposes
         #also gives the time unit from the first dataset in the list
         index_end,unit = get_time(model[0],settings["start_date"],settings["time_wanted"])
@@ -162,7 +169,7 @@ def single_files(data_sets,settings,target_lat_lon):
 #handles the reading of data from the observational files into a list of three dictionaries
 #one for observational, one for sonde and one for cloud
 
-def observation_files(obs_ds,start_time,end_time, height_high,height_low):
+def observation_files(obs_ds,start_time,end_time, height_high,height_low,hours):
     #first a list of desired variables is created
     variable_lst = [["tas_2m"]]
 
@@ -176,6 +183,8 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low):
 
     etime_dt = dt.datetime.strptime(end_time,'%Y-%m-%d %H:%M:%S')
     etime_num = cf.date2num(etime_dt,time_var.units,calendar="standard")
+    etime_num = etime_num+hours
+    print("e_time",cf.num2date(etime_num,time_var.units,calendar="standard"))
 
     time_index = np.where(((t >= stime_num)&(t<=etime_num)))[0]
     tindex_lo = time_index[0]

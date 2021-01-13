@@ -7,9 +7,7 @@
     "height_high": 100, 
     "height_low" : 0,
     "variables" : [
-      "ta",
-      "tas",
-      "ts"
+      "tas"
     ],
     "local" : "True",
     "single" : "True",
@@ -22,12 +20,14 @@
     ],
     "forcast_time" : "00",
     "plots" : [
-      "timevar",
       "scatter"
     ],
     "colors" : [
       "red",
-      "blue"
+      "blue",
+      "green",
+      "black",
+      "cyan"
     ],
     "single_point" : "True",
     "lat_ind_hi": 1,
@@ -38,27 +38,23 @@
   {
     "plot_name":"plot_two",
     "start_date": "2018-03-29 00:00:00",
-    "end_date": "2018-03-30 00:00:00",
+    "end_date": "2018-03-30 23:59:59",
     "height_high": 100, 
     "height_low" : 0,
     "variables" : [
-      "ta",
-      "tas",
-      "ts"
+      "tas"
     ],
     "local" : "True",
-    "single" : "False",
+    "single" : "True",
     "time_wanted": 24,
     "path_to_db" : "/home/jojo161/MISU/job_summer_2020/Data",
     "site" : "Barrow",
     "model_types" : [
-      "slav",
       "ifs"
     ],
     "forcast_time" : "00",
     "plots" : [
-      "timevar",
-      "scatter"
+      "timevar"
     ],
     "colors" : [
       "red",

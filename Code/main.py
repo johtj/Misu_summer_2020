@@ -31,7 +31,7 @@ for setting in settings_list:
 
         #observational files are always handled the same way, here the required data is 
         #retrieved and filtered, see get_var_sets.py
-        filtered_obs_var = observation_files(obs_ds,setting["start_date"],setting["end_date"],setting["height_high"],setting["height_low"])
+        filtered_obs_var = observation_files(obs_ds,setting["start_date"],setting["end_date"],setting["height_high"],setting["height_low"],setting["time_wanted"])
         filtered_mod_var = []
         
         if setting["single"] == "True":
