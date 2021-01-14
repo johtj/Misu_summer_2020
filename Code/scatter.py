@@ -21,7 +21,8 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
 
     var_obs = obs_data[var_name+"_2m"] #because the var names for tas vary between obs & mod
     #var_obs = obs_data[var_name] is the correct way, if the var names are constant across models and observations
- 
+    # line can be commented out or changed to fit other relevant variables.
+
     #creates a list of colors to use for different models if more than one is used
     colors = settings["colors"]
     color_index = 0
@@ -38,13 +39,15 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
         time_mod = cf.date2num(model["time_str"],model["time_units"],calendar="standard")
         
         tas_obs_res = []
+        var_mod_res = []
         #time_check = [] used to check if the time selection is done correctly
     
         var_mod = model[var_name]
 
-        print(obs_time_str[-1])
-        print(model["time_str"][-1])
+        print("obs: ",obs_time_str[-1])
+        print("mod: ",model["time_str"][-1])
         #loops the model's time array and looks for a match in the observational data time array
+        fucking_hell = []
         for reference in time_mod:
 
             match_initial = np.where(reference==obs_time_num)[0]
@@ -67,12 +70,16 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
                 #the earlier of the two (low) is chosen as the representative value
                 #the value from the desired variable
                 # at this time index is then added to the results list
-                if len(matches_spec) != 0:
+                
+               
+                if(len(matches_spec) != 0):
                     tas_obs_res.append(var_obs[matches_spec[0]])
+                    var_mod_res.append(var_mod[np.where((reference == time_mod))[0][0]])
                 else:
-                    #find index of time in var_time
-                    #delete item form mod_var corresponding to that time
-                    var_mod_res = np.delete(var_mod,np.where((reference == time_mod)))
+                    fucking_hell.append("in")
+                    
+                
+                    
                     
 
                 #time_check.append(obs_time_num[matches_spec[0]]) used to check if time selection is accurate
@@ -82,13 +89,16 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
                 #if the match is found initially the value from that time index is
                 #added to the results list from the desited variable
                 tas_obs_res.append(var_obs[match_initial][0])
+                var_mod_res.append(var_mod[np.where((reference == time_mod))[0][0]])
 
                 #time_check.append(obs_time_num[match_initial[0]]) used to check if time selection is accurate
 
         
        
-        
+        print(type(var_mod_res[0]),type(tas_obs_res),len(var_mod_res),len(tas_obs_res),len(fucking_hell))
         plt.scatter(var_mod_res,tas_obs_res,c = color)
+        print("plotted")
+        
         
 
         #plt.scatter(time_check,time_mod) used to check if time selection is accurate, if this

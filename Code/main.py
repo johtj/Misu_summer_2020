@@ -9,7 +9,7 @@ from get_var_sets import *
 from plot import *
 from scatter import *
 
-#this is the path to the location of the settings file, change this as approptiate 
+#this is the path to the location of the settings file, change this as appropriate 
 #before using the code
 fn = "/home/jojo161/MISU/job_summer_2020/Code/settings.json"
 

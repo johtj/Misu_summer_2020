@@ -119,6 +119,7 @@ def single_files(data_sets,settings,target_lat_lon):
 
         #creates a dictionary to keep the data in 
         data = {}
+        
 
         #creates and adds the time units and an array of datetime objects to the dictionary
         time_in_ds = ds["time"]
@@ -184,6 +185,7 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low,hours):
     etime_dt = dt.datetime.strptime(end_time,'%Y-%m-%d %H:%M:%S')
     etime_num = cf.date2num(etime_dt,time_var.units,calendar="standard")
     etime_num = etime_num+hours
+
     print("e_time",cf.num2date(etime_num,time_var.units,calendar="standard"))
 
     time_index = np.where(((t >= stime_num)&(t<=etime_num)))[0]
