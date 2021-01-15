@@ -9,21 +9,17 @@ def plot_single(data,settings,plot_type):
     units = data[0]["time_units"]
     for sets in data:
         time_plt = cf.date2num(sets["time_str"],units,calendar="standard")
-        print(cf.num2date(time_plt[0],units,calendar="standard"))
-        print(time_plt[0])
-        print(cf.num2date(time_plt[-1],units,calendar="standard"))
-        print(time_plt[-1])
-        print("===============================================================")
         for key in sets.keys():
-            if "time" not in key:
-                plt.plot(time_plt,sets[key],label = key)
+            if "name" not in key:
+                if "time" not in key:
+                    plt.plot(time_plt,sets[key],label = key +" " +sets["name"])
                 
         
     
                     
-    
-    path = "/home/jojo161/MISU/job_summer_2020/Figures/"
-    img_name = path + settings["plot_name"] +"_"+ plot_type +".png"
+    plt.xlabel(units)
+    path = settings["path_to_fig"]
+    img_name = path+"/" + settings["plot_name"] +".png"
     plt.legend()
     plt.savefig(img_name) 
     plt.close()  
@@ -40,8 +36,8 @@ def plot_combined(data,settings,plot_type):
                     plt.plot(time_num,model[key],label = key+" "+model["name"])
         
    
-    path = "/home/jojo161/MISU/job_summer_2020/Figures/"
-    img_name = path + settings["plot_name"]+"_" + plot_type +".png"
+    path = settings["path_to_fig"]
+    img_name = path+"/" + settings["plot_name"] +".png"
     plt.legend()
     plt.savefig(img_name)
     plt.close()

@@ -43,28 +43,29 @@ def get_levels(data_set,height_high,height_low):
 #######################################################################################
 #handles the retreival of an end time index for filtering by time
 
-def get_time(data_set,start_time_str,time_wanted):
+def get_time(data_set,time_wanted):
     #creates the time variable 
     time_var = data_set["time"]
     time_data = time_var[:]
 
     #adapts the time_wanted variable (which is in hours)
     #to the model units if they are in minutes
-
+    
     if "minutes" in time_var.units:
         time_wanted = time_wanted*60
 
     #makes the start time string into a number using the time units from the 
     #time variable created above
-    start_time_dt = dt.datetime.strptime(start_time_str,'%Y-%m-%d %H:%M:%S')
-    start_time_num = cf.date2num(start_time_dt,time_var.units,calendar="standard")
+    start_time_num = time_data[0]
 
     #calculates an end time by adding the time_wanted to the start time number
     end_time_num = start_time_num + time_wanted
+    
 
     #finds the index of where this time occurs in the time array
     end_lst = np.where((time_data<=end_time_num))[-1]
-    end_index = end_lst[-1]
+    
+    end_index = end_lst[-2]
 
 
     unit = time_var.units.replace("minutes","hours").replace("0.0","00")

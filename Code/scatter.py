@@ -44,8 +44,7 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
     
         var_mod = model[var_name]
 
-        print("obs: ",obs_time_str[-1])
-        print("mod: ",model["time_str"][-1])
+        
         #loops the model's time array and looks for a match in the observational data time array
         fucking_hell = []
         for reference in time_mod:
@@ -75,8 +74,7 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
                 if(len(matches_spec) != 0):
                     tas_obs_res.append(var_obs[matches_spec[0]])
                     var_mod_res.append(var_mod[np.where((reference == time_mod))[0][0]])
-                else:
-                    fucking_hell.append("in")
+                
                     
                 
                     
@@ -95,9 +93,9 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
 
         
        
-        print(type(var_mod_res[0]),type(tas_obs_res),len(var_mod_res),len(tas_obs_res),len(fucking_hell))
+        
         plt.scatter(var_mod_res,tas_obs_res,c = color)
-        print("plotted")
+        
         
         
 
@@ -108,9 +106,9 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
         color_index = color_index + 1
 
     #creates path to where the image should be saved,
-    # change this according to where you want your figures saved.   
-    path = "/home/jojo161/MISU/job_summer_2020/Figures/"
-    img_name = path + settings["plot_name"] +".png"
+    # change this in the json file according to where you want your figures saved.   
+    path = settings["path_to_fig"]
+    img_name = path+"/" + settings["plot_name"] +".png"
 
     #sets the x and y labels
     plt.xlabel("tas from model")

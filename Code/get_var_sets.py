@@ -26,10 +26,10 @@ def combine_files(data_sets,settings,target_lat_lon,file_names):
     
         data = {}
         data["name"] = name
-        print(data["name"])
+        
         #calculates the index of the last time needed for time filtering purposes
         #also gives the time unit from the first dataset in the list
-        index_end,unit = get_time(model[0],settings["start_date"],settings["time_wanted"])
+        index_end,unit = get_time(model[0],settings["time_wanted"])
 
         #takes the time data from all the datasets, 
         #converts them to use the same unit as used in the first file
@@ -115,17 +115,22 @@ def single_files(data_sets,settings,target_lat_lon):
     for ds in data_sets:
 
         #calculates the index of the last time needed for time filtering purposes
-        end_index = get_time(data_sets[0],settings["start_date"],settings["time_wanted"])[0]
-
+        end_index = get_time(ds,settings["time_wanted"])[0]
+        
         #creates a dictionary to keep the data in 
         data = {}
         
+        title = ds.title
+        title = title[0:10]
+       
+        data["name"] = title
 
         #creates and adds the time units and an array of datetime objects to the dictionary
         time_in_ds = ds["time"]
-        data["time_units"] = time_in_ds.units.replace("minutes","hours")
+        data["time_units"] = time_in_ds.units
+        #.replace("minutes","hours")
         data["time_str"] = cf.num2date(time_in_ds[0:end_index],time_in_ds.units,calendar="standard")
-        
+       
         #gets level and half_level indecies for filtering purposes
         try:
             level, half_level = get_levels(ds,settings["height_high"],settings["height_low"])
@@ -186,7 +191,6 @@ def observation_files(obs_ds,start_time,end_time, height_high,height_low,hours):
     etime_num = cf.date2num(etime_dt,time_var.units,calendar="standard")
     etime_num = etime_num+hours
 
-    print("e_time",cf.num2date(etime_num,time_var.units,calendar="standard"))
 
     time_index = np.where(((t >= stime_num)&(t<=etime_num)))[0]
     tindex_lo = time_index[0]

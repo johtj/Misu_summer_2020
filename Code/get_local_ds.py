@@ -58,7 +58,7 @@ def get_local_ds(start_date,end_date,path_to_db,site,model_types,forcast_time):
     model_ds = [nc.Dataset(f_path) for f_path in files_path]
     
     #two lists of datasets are returned, one for model data one for observation data  
-
+    
         
     return model_ds, obs_ds ,files_path
 
