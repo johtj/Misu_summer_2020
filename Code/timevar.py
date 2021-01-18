@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import cftime as cf
-import matplotlib.ticker as tick
+
 
 #purpose to plot models for set timespan with differnt starting points so they overlap
 def plot_single(data,settings,plot_type):
@@ -19,7 +19,7 @@ def plot_single(data,settings,plot_type):
                     
     plt.xlabel(units)
     path = settings["path_to_fig"]
-    img_name = path+"/" + settings["plot_name"] +".png"
+    img_name = path+"/" + settings["plot_name"]+" _timevar" +".png"
     plt.legend()
     plt.savefig(img_name) 
     plt.close()  
@@ -37,7 +37,7 @@ def plot_combined(data,settings,plot_type):
         
    
     path = settings["path_to_fig"]
-    img_name = path+"/" + settings["plot_name"] +".png"
+    img_name = path+"/" + settings["plot_name"]+" _timevar" +".png"
     plt.legend()
     plt.savefig(img_name)
     plt.close()

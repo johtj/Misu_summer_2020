@@ -6,8 +6,13 @@ Getting started:
         prerequisites:
                 all contained in this Git repo, use the structure in the Data folder to contain your database of model and observational files.
                 python 3
-                the netcdf library for python 
+                netCDF4 for python 
                 matplotlib 
+                numpy
+                cftime
+                datetime
+                os python
+                json
                 
        Note that this code was created and tested in Linux Ubuntu, this code has not been tried in Windows and may need adaptation 
        if it is to be used in Windows.
@@ -133,7 +138,8 @@ Running the code:
         
         python3 Code/main.py
 
-        this should run the program
+        this should run the program. When the program runs the plot names
+        of the created plots should be prnted in the terminal. 
 
 
 -----------------------------------------------------

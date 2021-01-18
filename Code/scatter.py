@@ -46,7 +46,6 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
 
         
         #loops the model's time array and looks for a match in the observational data time array
-        fucking_hell = []
         for reference in time_mod:
 
             match_initial = np.where(reference==obs_time_num)[0]
@@ -91,10 +90,13 @@ def scatter_plot(mod_data,obs_data,settings,var_name):
 
                 #time_check.append(obs_time_num[match_initial[0]]) used to check if time selection is accurate
 
-        
-       
-        
-        plt.scatter(var_mod_res,tas_obs_res,c = color)
+        if settings["single"] != "True":
+            name = model["name"]
+            plt.scatter(var_mod_res,tas_obs_res,c=color, label = name )
+            plt.legend()
+
+        else:
+            plt.scatter(var_mod_res,tas_obs_res,c = color)
         
         
         
