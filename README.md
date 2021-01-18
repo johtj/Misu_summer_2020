@@ -3,16 +3,16 @@ YOPPsiteMIP model evaluation
 
 ---------------------------------------------------
 Getting started:
-        prerequisites: \n
-                all contained in this Git repo, use the structure visually detailed in the Dcumentation for Data folder to contain your database of model and observational files. \n
-                python 3 \n
-                netCDF4 for python \n
-                matplotlib \n
-                numpy\n
-                cftime \n
-                datetime \n
-                os python \n
-                json \n
+        prerequisites: 
+                all contained in this Git repo, use the structure visually detailed in the Dcumentation for Data folder to contain your database of model and observational files. 
+                python 3 
+                netCDF4 for python 
+                matplotlib
+                numpy
+                cftime
+                datetime
+                os python 
+                json 
                 
        Note that this code was created and tested in Linux Ubuntu, this code has not been tried in Windows and may need adaptation 
        if it is to be used in Windows.
